@@ -1,31 +1,65 @@
-// NoteList.test.jsx
-import { render, screen } from '@testing-library/react' 
-import NoteList from '../../components/NoteList.jsx'
+import { render, screen, fireEvent } from '@testing-library/react';
+import NoteList from '../../components/NoteList';
+import '@testing-library/jest-dom';
 
-// Deskripsi komponen yang di-test
 describe('NoteList', () => {
-  // Data test
   const mockNotes = [
-    'Belajar React',
-    'Membuat komponen',
-    'Testing React'
-  ]
+    {
+      id: 1,
+      title: 'Belajar React',
+      content: 'Mempelajari dasar-dasar React',
+      createdAt: '2025-06-14T10:00:00Z'
+    },
+    {
+      id: 2,
+      title: 'Membuat komponen',
+      content: 'Membuat komponen React yang reusable',
+      createdAt: '2025-06-13T15:30:00Z'
+    }
+  ];
 
-  // Test case 1: Rendering dasar
-  test('merender daftar catatan', () => {
-    render(<NoteList notes={mockNotes} />)
+  const mockOnDeleteNote = jest.fn();
+
+  beforeEach(() => {
+    mockOnDeleteNote.mockClear();
+  });
+
+  it('renders the list title', () => {
+    render(<NoteList notes={mockNotes} onDeleteNote={mockOnDeleteNote} />);
+    expect(screen.getByText('Daftar Catatan')).toBeInTheDocument();
+  });
+
+  it('renders NoteCard for each note', () => {
+    render(<NoteList notes={mockNotes} onDeleteNote={mockOnDeleteNote} />);
     
-    // Assertions
+    // Check if each note's title is rendered
     mockNotes.forEach(note => {
-      expect(screen.getByText(note)).toBeInTheDocument()
-    })
-  })
+      expect(screen.getByText(note.title)).toBeInTheDocument();
+      expect(screen.getByText(note.content.substring(0, 100))).toBeInTheDocument();
+    });
+  });
 
-  // Test case 2: Kondisi kosong
-  test('menampilkan pesan ketika tidak ada catatan', () => {
-    render(<NoteList notes={[]} />)
-    expect(screen.getByText('Tidak ada catatan.')).toBeInTheDocument()
-  })
+  it('displays empty message when no notes', () => {
+    render(<NoteList notes={[]} onDeleteNote={mockOnDeleteNote} />);
+    expect(screen.getByText('Tidak ada catatan.')).toBeInTheDocument();
+  });
 
+  it('calls onDeleteNote with correct id when delete button is clicked', () => {
+    render(<NoteList notes={mockNotes} onDeleteNote={mockOnDeleteNote} />);
+    
+    const deleteButtons = screen.getAllByRole('button', { name: /hapus/i });
+    fireEvent.click(deleteButtons[0]);
+    
+    expect(mockOnDeleteNote).toHaveBeenCalledWith(mockNotes[0].id);
+    expect(mockOnDeleteNote).toHaveBeenCalledTimes(1);
+  });
 
-})
+  it('formats dates correctly', () => {
+    render(<NoteList notes={mockNotes} onDeleteNote={mockOnDeleteNote} />);
+    
+    // Check if the formatted date is in the document
+    // The exact format might vary based on locale
+    expect(screen.getByText(/14 Juni 2025/)).toBeInTheDocument();
+    expect(screen.getByText(/13 Juni 2025/)).toBeInTheDocument();
+  });
+});

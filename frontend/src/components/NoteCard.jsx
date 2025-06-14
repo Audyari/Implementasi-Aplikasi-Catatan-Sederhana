@@ -21,15 +21,17 @@ const NoteCard = ({ title, content, date, onDelete }) => {
       <div className="note-card__content">
         {content.length > 100 ? `${content.substring(0, 100)}...` : content}
       </div>
-      <div className="note-card__actions">
-        <button 
-          className="note-card__delete" 
-          onClick={onDelete}
-          aria-label="Hapus catatan"
-        >
-          Hapus
-        </button>
-      </div>
+      {onDelete && (
+        <div className="note-card__actions">
+          <button 
+            className="note-card__delete" 
+            onClick={onDelete}
+            aria-label="Hapus catatan"
+          >
+            Hapus
+          </button>
+        </div>
+      )}
     </div>
   );
 };
