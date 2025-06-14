@@ -13,9 +13,11 @@ jest.mock('../NoteCard', () => {
         <div data-testid="note-card-title">{title}</div>
         <div data-testid="note-card-content">{content}</div>
         <div data-testid="note-card-date">{date}</div>
-        <button data-testid="note-card-delete" onClick={onDelete}>
-          Hapus
-        </button>
+        {onDelete && (
+          <button data-testid="note-card-delete" onClick={onDelete}>
+            Hapus
+          </button>
+        )}
       </div>
     );
   };
@@ -225,6 +227,54 @@ describe('NoteList Component', () => {
       // Verifikasi onDeleteNote dipanggil dengan ID yang benar untuk catatan kedua
       expect(mockProps.onDeleteNote).toHaveBeenCalledTimes(1);
       expect(mockProps.onDeleteNote).toHaveBeenCalledWith(catatanUji[1].id);
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('menangani ketika notes adalah null atau undefined', () => {
+      // Test dengan notes undefined (akan menggunakan default value [])
+      const { container: containerUndefined } = render(
+        <NoteList {...mockProps} notes={undefined} />
+      );
+      expect(containerUndefined).toBeInTheDocument();
+      expect(screen.getByText('Tidak ada catatan.')).toBeInTheDocument();
+      
+      // Test dengan notes null (akan menyebabkan error karena null.length tidak ada)
+      // Jadi kita akan menangkap error yang diharapkan
+      const originalError = console.error;
+      console.error = jest.fn();
+      
+      expect(() => {
+        render(<NoteList {...mockProps} notes={null} />);
+      }).toThrow();
+      
+      // Kembalikan console.error ke fungsi aslinya
+      console.error = originalError;
+      
+      // Pastikan tidak ada NoteCard yang dirender dalam kasus undefined
+      expect(screen.queryAllByTestId('note-card')).toHaveLength(0);
+    });
+
+    it('menangani ketika sortOptions kosong', () => {
+      // Render dengan sortOptions kosong
+      const { container } = render(
+        <NoteList 
+          {...mockProps} 
+          notes={catatanUji} 
+          sortOptions={{}} 
+        />
+      );
+      
+      // Verifikasi komponen tetap dirender tanpa error
+      expect(container).toBeInTheDocument();
+      
+      // Verifikasi dropdown sort masih ada tapi tidak memiliki opsi
+      const selectElement = screen.getByRole('combobox');
+      expect(selectElement).toBeInTheDocument();
+      expect(selectElement.options).toHaveLength(0);
+      
+      // Verifikasi catatan tetap ditampilkan
+      expect(screen.getAllByTestId('note-card')).toHaveLength(catatanUji.length);
     });
   });
 });
