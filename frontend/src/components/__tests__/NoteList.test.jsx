@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import NoteList from '../NoteList';
 
 // Mock komponen NoteCard dengan cara yang lebih sederhana
+
+// cara jalanin unit test : npm test src/components/__tests__/NoteList.test.jsx
 jest.mock('../NoteCard', () => {
   return function MockNoteCard({ title, content, date, onDelete }) {
     return (
@@ -139,6 +141,60 @@ describe('NoteList Component', () => {
       const selectElement = screen.getByRole('combobox');
       fireEvent.change(selectElement, { target: { value: 'title_asc' } });
       expect(mockProps.onSortChange).toHaveBeenCalledWith('title_asc');
+    });
+  });
+
+  describe('Fungsi Sort', () => {
+    it('memanggil onSortChange dengan nilai yang benar saat dropdown diubah', () => {
+      render(<NoteList {...mockProps} notes={catatanUji} />);
+      
+      // Temukan dropdown select
+      const selectElement = screen.getByRole('combobox');
+      
+      // Simulasikan perubahan nilai dropdown
+      fireEvent.change(selectElement, { target: { value: 'oldest' } });
+      
+      // Verifikasi onSortChange dipanggil dengan nilai yang benar
+      expect(mockProps.onSortChange).toHaveBeenCalledTimes(1);
+      expect(mockProps.onSortChange).toHaveBeenCalledWith('oldest');
+      
+      // Reset mock dan coba nilai lain
+      mockProps.onSortChange.mockClear();
+      fireEvent.change(selectElement, { target: { value: 'title_asc' } });
+      
+      // Verifikasi onSortChange dipanggil dengan nilai yang benar lagi
+      expect(mockProps.onSortChange).toHaveBeenCalledTimes(1);
+      expect(mockProps.onSortChange).toHaveBeenCalledWith('title_asc');
+    });
+
+    it('menampilkan opsi sort yang sesuai dari prop sortOptions', () => {
+      const customSortOptions = {
+        newest: { label: 'Terbaru' },
+        oldest: { label: 'Terlama' },
+        title_asc: { label: 'Judul A-Z' },
+        title_desc: { label: 'Judul Z-A' }
+      };
+      
+      render(
+        <NoteList 
+          {...mockProps} 
+          sortOptions={customSortOptions} 
+          notes={catatanUji} 
+        />
+      );
+      
+      // Verifikasi semua opsi ditampilkan
+      const selectElement = screen.getByRole('combobox');
+      const options = selectElement.querySelectorAll('option');
+      
+      // Verifikasi jumlah opsi sesuai dengan yang diharapkan
+      expect(options.length).toBe(Object.keys(customSortOptions).length);
+      
+      // Verifikasi setiap opsi memiliki nilai dan teks yang benar
+      Object.entries(customSortOptions).forEach(([value, option], index) => {
+        expect(options[index].value).toBe(value);
+        expect(options[index].textContent).toBe(option.label);
+      });
     });
   });
 });
