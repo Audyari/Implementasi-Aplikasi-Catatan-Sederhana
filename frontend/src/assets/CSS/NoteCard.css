@@ -1,0 +1,47 @@
+/* NoteCard.css */
+.note-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .note-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .note-card__title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .note-card__date {
+    color: #666;
+    font-size: 0.875rem;
+  }
+  
+  .note-card__content {
+    color: #444;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  
+  .note-card__delete {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+  }
+  
+  .note-card__delete:hover {
+    background-color: #cc0000;
+  }
