@@ -197,4 +197,34 @@ describe('NoteList Component', () => {
       });
     });
   });
+
+  describe('Fungsi Hapus', () => {
+    it('memanggil onDeleteNote dengan ID yang benar saat tombol hapus ditekan', () => {
+      // Render komponen dengan catatan uji
+      render(<NoteList {...mockProps} notes={catatanUji} />);
+      
+      // Dapatkan semua tombol hapus
+      const deleteButtons = screen.getAllByTestId('note-card-delete');
+      
+      // Pastikan ada tombol hapus yang sesuai dengan jumlah catatan
+      expect(deleteButtons).toHaveLength(catatanUji.length);
+      
+      // Klik tombol hapus pada catatan pertama
+      fireEvent.click(deleteButtons[0]);
+      
+      // Verifikasi onDeleteNote dipanggil dengan ID yang benar
+      expect(mockProps.onDeleteNote).toHaveBeenCalledTimes(1);
+      expect(mockProps.onDeleteNote).toHaveBeenCalledWith(catatanUji[0].id);
+      
+      // Reset mock
+      mockProps.onDeleteNote.mockClear();
+      
+      // Klik tombol hapus pada catatan kedua
+      fireEvent.click(deleteButtons[1]);
+      
+      // Verifikasi onDeleteNote dipanggil dengan ID yang benar untuk catatan kedua
+      expect(mockProps.onDeleteNote).toHaveBeenCalledTimes(1);
+      expect(mockProps.onDeleteNote).toHaveBeenCalledWith(catatanUji[1].id);
+    });
+  });
 });
