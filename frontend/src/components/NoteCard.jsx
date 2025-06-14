@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import '../assets/CSS/NoteCard.css';
 
 const NoteCard = ({ title, content, date, onDelete }) => {
-  // Format tanggal menjadi format yang lebih mudah dibaca
   const formattedDate = new Date(date).toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
@@ -21,18 +20,13 @@ const NoteCard = ({ title, content, date, onDelete }) => {
       <div className="note-card__content">
         {content.length > 100 ? `${content.substring(0, 100)}...` : content}
       </div>
-      {onDelete && (
-        <div className="note-card__actions">
-         <button 
-            className="note-card__delete" 
-            onClick={onDelete}
-            aria-label="Hapus catatan"
-            data-testid="delete-button"  // Tambahkan ini
-        >
-            Hapus
-        </button>
-        </div>
-      )}
+      <button 
+        className="note-card__delete"
+        onClick={onDelete}
+        data-testid="note-card-delete"
+      >
+        Hapus
+      </button>
     </div>
   );
 };
@@ -40,11 +34,8 @@ const NoteCard = ({ title, content, date, onDelete }) => {
 NoteCard.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  date: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  onDelete: PropTypes.func
+  date: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default NoteCard;

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import NoteCard from './NoteCard';
@@ -9,7 +8,7 @@ function NoteList({
   onDeleteNote, 
   sortOption, 
   onSortChange, 
-  sortOptions = {}
+  sortOptions = {} 
 }) {
   useEffect(() => {
     document.title = "Daftar Catatan";
@@ -44,9 +43,9 @@ function NoteList({
         {notes.length === 0 ? (
           <p className="empty-message">Tidak ada catatan.</p>
         ) : (
-          notes.map((note, index) => (
+          notes.map((note) => (
             <NoteCard
-              key={note.id || index}
+              key={note.id}
               title={note.title}
               content={note.content}
               date={note.createdAt}
@@ -65,10 +64,7 @@ NoteList.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       title: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      createdAt: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(Date)
-      ]).isRequired
+      createdAt: PropTypes.string.isRequired
     })
   ).isRequired,
   onDeleteNote: PropTypes.func.isRequired,
