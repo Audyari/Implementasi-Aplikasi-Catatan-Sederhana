@@ -23,13 +23,14 @@ const NoteCard = ({ title, content, date, onDelete }) => {
       </div>
       {onDelete && (
         <div className="note-card__actions">
-          <button 
+         <button 
             className="note-card__delete" 
             onClick={onDelete}
             aria-label="Hapus catatan"
-          >
+            data-testid="delete-button"  // Tambahkan ini
+        >
             Hapus
-          </button>
+        </button>
         </div>
       )}
     </div>

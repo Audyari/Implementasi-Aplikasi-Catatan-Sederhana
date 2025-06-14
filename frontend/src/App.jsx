@@ -2,6 +2,14 @@ import { useState } from 'react';
 import NoteList from './components/NoteList';
 import './assets/CSS/app.css';
 
+// Sorting options
+const SORT_OPTIONS = {
+  DATE_DESC: { key: 'date', order: 'desc', label: 'Terbaru' },
+  DATE_ASC: { key: 'date', order: 'asc', label: 'Terlama' },
+  TITLE_ASC: { key: 'title', order: 'asc', label: 'Judul (A-Z)' },
+  TITLE_DESC: { key: 'title', order: 'desc', label: 'Judul (Z-A)' },
+};
+
 function App() {
   const [notes, setNotes] = useState([
     {

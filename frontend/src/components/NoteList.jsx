@@ -4,14 +4,42 @@ import PropTypes from 'prop-types';
 import NoteCard from './NoteCard';
 import '../assets/CSS/NoteList.css';
 
-function NoteList({ notes = [], onDeleteNote }) {
+function NoteList({ 
+  notes = [], 
+  onDeleteNote, 
+  sortOption, 
+  onSortChange, 
+  sortOptions = {}
+}) {
   useEffect(() => {
     document.title = "Daftar Catatan";
   }, []);
 
+  const handleSortChange = (e) => {
+    onSortChange(e.target.value);
+  };
+
   return (
     <div className="note-list">
-      <h2 className="note-list__title">Daftar Catatan</h2>
+      <div className="note-list__header">
+        <h2 className="note-list__title">Daftar Catatan</h2>
+        <div className="sort-controls">
+          <label htmlFor="sort-select" className="sort-label">Urutkan:</label>
+          <select 
+            id="sort-select"
+            className="sort-select"
+            value={sortOption}
+            onChange={handleSortChange}
+          >
+            {Object.entries(sortOptions).map(([key, option]) => (
+              <option key={key} value={key}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
       <div className="notes-grid">
         {notes.length === 0 ? (
           <p className="empty-message">Tidak ada catatan.</p>
@@ -43,7 +71,10 @@ NoteList.propTypes = {
       ]).isRequired
     })
   ).isRequired,
-  onDeleteNote: PropTypes.func.isRequired
+  onDeleteNote: PropTypes.func.isRequired,
+  sortOption: PropTypes.string.isRequired,
+  onSortChange: PropTypes.func.isRequired,
+  sortOptions: PropTypes.object.isRequired
 };
 
 export default NoteList;
