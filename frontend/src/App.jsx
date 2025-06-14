@@ -1,7 +1,16 @@
+import NoteList from './components/NoteList';
+
 function App() {
+  const notes = [
+    'Belajar React Dasar',
+    'Mengenal Komponen React',
+    'Memahami State & Props'
+  ];
+
   return (
-    <div>
-      <h1>Hello Notes App</h1>
+    <div className="app">
+      <h1>Daftar Catatan</h1>
+      <NoteList notes={notes} />
     </div>
   );
 }
